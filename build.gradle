@@ -31,5 +31,8 @@ dependencyManagement {
 }
 
 test {
+	environment "COURSE_API_URL",  "localhost:8091"
+	environment "USER_API_URL",  "localhost:8092"
+
 	useJUnitPlatform()
 }

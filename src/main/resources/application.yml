@@ -1,17 +1,33 @@
 server:
-  port: 8084
+  port: 8090
 spring:
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+            allowCredentials: true
       routes:
         - id: courses_route
-          uri: http://localhost:8082
+          uri: http://algaworks-course-api:8091
           predicates:
             - Path=/courses/**
         - id: users_route
-          uri: http://localhost:8083
+          uri: http://algaworks-user-api:8092
           predicates:
             - Path=/users/**
+          filters:
+            - RewritePath=/users/oauth2/authorization/(?<segment>.*), /oauth2/authorization/$\{segment}
+
 management:
   endpoints:
     web:
